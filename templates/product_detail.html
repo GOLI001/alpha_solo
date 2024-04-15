@@ -1,0 +1,396 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    
+<div class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__links">
+                    <a href="./index.html"><i class="fa fa-home"></i> Home</a>
+                    <a href="#">{{single_product.category}}</a>
+                    <span>{{single_product.product_name}}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Breadcrumb End -->
+
+<!-- Product Details Section Begin -->
+<section class="product-details spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="product__details__pic">
+                    <div class="product__details__pic__left product__thumb nice-scroll">
+                        {% for image in imgg %}
+                            {% if image %}
+                                <a class="pt{% if forloop.first %} active{% endif %}" href="#product-{{ forloop.counter }}">
+                                    <img src="{{ image.url }}" alt="">
+                                </a>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="product__details__slider__content">
+                        <div class="product__details__pic__slider owl-carousel">
+                            {% load thumbnail %}
+
+                            {% for image in imgg %}
+                                {% if image %}
+                                    <img data-hash="product-{{ forloop.counter }}" class="product__big__img" src="{% thumbnail image 512x512 box=product.cropping crop detail %}" alt="">
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+
+                <form action="{% url 'add_cart' single_product.id %}" method="POST">
+                    {% csrf_token %}
+                <div class="product__details__text">
+                    <h3>{{single_product.product_name}} <span>{{single_product.category}}</span></h3>
+                    <div class="rating">
+                        <div class="my-2 rating-star">
+                            <span>
+                                <i class="fa fa-star{% if single_product.averageReview < 0.5 %}-o{% elif single_product.averageReview >= 0.5 and single_product.averageReview < 1 %}-half-o {% endif %}" aria-hidden="true"></i>
+
+                                <i class="fa fa-star{% if single_product.averageReview < 1.5 %}-o{% elif single_product.averageReview >= 1.5 and single_product.averageReview < 2 %}-half-o {% endif %}" aria-hidden="true"></i>
+
+                                <i class="fa fa-star{% if single_product.averageReview < 2.5 %}-o{% elif single_product.averageReview >= 2.5 and single_product.averageReview < 3 %}-half-o {% endif %}" aria-hidden="true"></i>
+
+                                <i class="fa fa-star{% if single_product.averageReview < 3.5 %}-o{% elif single_product.averageReview >= 3.5 and single_product.averageReview < 4 %}-half-o {% endif %}" aria-hidden="true"></i>
+
+                                <i class="fa fa-star{% if single_product.averageReview < 4.5 %}-o{% elif single_product.averageReview >= 4.5 and single_product.averageReview < 5 %}-half-o {% endif %}" aria-hidden="true"></i>
+                            </span>
+                            <span class="ml-1" style="color:#777; font-size: 14px;">( {{single_product.countReview}}  Reviews )</span>
+                        </div>
+                    </div>
+                    <div class="product__details__price">{{single_product.price}} ₸<span>{{single_product.price|add:"+1000000"}} ₸</span></div>
+                    <p>{{single_product.description}}</p>
+                    <div class="product__details__button">
+                       
+                        {% if single_product.stock <= 0 %}
+                        <a href="" class="cart-btn"><span class=""></span>Out of stock</a>
+                        {% else %}
+
+                        
+                         <button type="submit" href="" class="cart-btn"><span class="icon_bag_alt"></span> Add to cart</button>
+                        
+                        {% endif %}
+                        
+                       
+                        <ul>
+                            <li><a href="#"><span class="icon_heart_alt"></span></a></li>
+                            <li><a href="#"><span class="icon_adjust-horiz"></span></a></li>
+                        </ul>
+                    </div>
+                    <div class="product__details__widget">
+                        <ul>
+                            <li>
+                                <span>Availability:</span>
+                                <div class="stock__checkbox">
+                                    <label for="stockin">
+                                        In Stock
+                                        <input type="checkbox" id="stockin">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                </div>
+                            </li>
+                            <li>
+                                <span>Available color:</span>
+                                <div class="color__checkbox">
+                                    {% for i in single_product.variation_set.colors %}
+                                    <label for="{{i.variation_value}}">
+                                        <input type="radio" name="color" value="{{i.variation_value}}" id="{{i.variation_value}}">
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </li>
+                            <li>
+                                <span>Available size:</span>
+                                <div class="size__btn">
+                                    {% for i in single_product.variation_set.sizes %}
+                                    <label for="{{i.variation_value}}-btn" class="">
+                                        <input type="radio" name="size" id="{{i.variation_value}}-btn" value="{{i.variation_value}}">
+                                        {{i.variation_value}}
+                                    </label>
+                                    {% endfor %}
+                                    
+                                </div>
+                            </li>
+                            <li>
+                                <span>Promotions:</span>
+                                <p>Free shipping</p>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </form>
+            </div>
+            <div class="col-lg-12">
+                <div class="product__details__tab">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-toggle="tab" href="#tabs-1" role="tab">Description</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-2" role="tab">Specification</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#tabs-3" role="tab">Reviews ( 2 )</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tabs-1" role="tabpanel">
+                            <h6>Description</h6>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                            consequat massa quis enim.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                            quis, sem.</p>
+                        </div>
+                        <div class="tab-pane" id="tabs-2" role="tabpanel">
+                            <h6>Specification</h6>
+                            <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed
+                                quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt loret.
+                                Neque porro lorem quisquam est, qui dolorem ipsum quia dolor si. Nemo enim ipsam
+                                voluptatem quia voluptas sit aspernatur aut odit aut loret fugit, sed quia ipsu
+                                consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Nulla
+                            consequat massa quis enim.</p>
+                            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget
+                                dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes,
+                                nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium
+                            quis, sem.</p>
+                        </div>
+                        <div class="tab-pane" id="tabs-3" role="tabpanel">
+                            <br>
+                            <form action="{% url 'submit_review' single_product.id  %}" method="POST" class="mx-2 mb-3 p-3" >
+                                {% csrf_token %}
+                                <h5 class="mb-3 text-center">Write Your Review</h5>
+                                <div class="d-flex align-items-center">
+                                    <!-- Rating Stars -->
+                                    <label for="rating" class="mr-3 rating">Rate this Product : </label>
+                                    <br>
+                                    <div class="rate rating-star">
+                                        <input type="radio" name="rating" id="rating10" value="5" required>
+                                        <label for="rating10" title="5"></label>
+                                        <input type="radio" name="rating" id="rating9" value="4.5" required>
+                                        <label for="rating9" title="4.5" class="half"></label>
+                                        <input type="radio" name="rating" id="rating8" value="4" required>
+                                        <label for="rating8" title="4"></label>
+                                        <input type="radio" name="rating" id="rating7" value="3.5" required>
+                                        <label for="rating7" title="3.5" class="half"></label>
+                                        <input type="radio" name="rating" id="rating6" value="3" required>
+                                        <label for="rating6" title="3"></label>
+                                        <input type="radio" name="rating" id="rating5" value="2.5" required>
+                                        <label for="rating5" title="2.5" class="half"></label>
+                                        <input type="radio" name="rating" id="rating4" value="2" required>
+                                        <label for="rating4" title="2"></label>
+                                        <input type="radio" name="rating" id="rating3" value="1.5" required>
+                                        <label for="rating3" title="1.5" class="half"></label>
+                                        <input type="radio" name="rating" id="rating2" value="1" required>
+                                        <label for="rating2" title="1"></label>
+                                        <input type="radio" name="rating" id="rating1" value="0.5" required>
+                                        <label for="rating1" title="0.5" class="half"></label>
+                                    </div>
+                                </div>
+        
+                                <br>
+        
+                                <div>
+                                    Review Title : 
+                                    <input type="text" class="form-control" name="subject">
+        
+                                    <br>
+                                    Review : 
+                                    <textarea name="review" rows="4" class="form-control"></textarea>
+        
+                                    <br>
+                                        {% if user.is_authenticated %}
+                                        {% if orderproduct %}
+                                            <input type="submit" value="Submit" class="btn amado-btn">
+                                        {% else %}
+                                        <p class="text-danger text-center">You must Purchase this Product to post a review.</p>
+                                        {% endif %}
+                                            {% else %}
+                                           
+                                       
+                                    
+                                        <p class="text-danger text-center">You must be logged in to post a review <span><a style="color: #fbb710; font-size: 16px; border-bottom: 2px solid" href="{% url 'login' %}">Login</a></span></p>
+                                        {% endif %}
+        
+                                </div>
+                                <div class="mt-3">
+                                   
+                                </div>
+                            </form>
+
+
+
+                            {% for reviews in reviews %}
+
+                            <article class="p-3 mb-3" style="border: 1px solid #e2e2dd; box-shadow:  0 6px 6px  rgba(0,0,0,0.05);">
+                                <div class="d-flex align-items-center">
+                                    <h6 class="mb-0" style="font-weight: 700; letter-spacing: 1px; color: #000000;">{{ reviews.user.full_name }}</h6>
+                                    <span style="margin-left: auto; color: #777;">{{ reviews.updated_at | date }}</span>
+                                </div>
+                                <div class="mt-3 rating-star">
+                                    <span>
+                                        <i class="fa fa-star{% if reviews.rating == 0.5 %}-half-o{% elif reviews.rating < 1 %}-o {% endif %}" aria-hidden="true"></i>
+        
+                                        <i class="fa fa-star{% if reviews.rating == 1.5 %}-half-o{% elif reviews.rating < 2 %}-o {% endif %}" aria-hidden="true"></i>
+        
+                                        <i class="fa fa-star{% if reviews.rating == 2.5 %}-half-o{% elif reviews.rating < 3 %}-o {% endif %}" aria-hidden="true"></i>
+        
+                                        <i class="fa fa-star{% if reviews.rating == 3.5 %}-half-o{% elif reviews.rating < 4 %}-o {% endif %}" aria-hidden="true"></i>
+        
+                                        <i class="fa fa-star{% if reviews.rating == 4.5 %}-half-o{% elif reviews.rating < 5  %}-o {% endif %}" aria-hidden="true"></i>
+                                    </span>
+                                </div>
+                                <div class="mt-3">
+        
+                                    {% if reviews.subject %}
+                                    <h6>{{ reviews.subject }}</h6>
+                                    {% endif %}
+        
+                                    {% if reviews.review %}
+                                    <p>{{ reviews.review }}</p>
+                                    {% endif %}
+                                </div>
+                            </article>
+                             
+                            {% endfor %}
+
+
+
+                        </div>
+
+                      
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Product Details Section End -->
+
+<!-- Instagram Begin -->
+<div class="instagram">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-1.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-2.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-3.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-4.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-5.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+                <div class="instagram__item set-bg" data-setbg="{% static 'img/instagram/insta-6.jpg' %}">
+                    <div class="instagram__text">
+                        <i class="fa fa-instagram"></i>
+                        <a href="#">@ akmadi_galymzhan</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Instagram End -->
+
+
+<style>
+    /* Hiding the radio button */
+    .rate > input {
+        display: none;
+    }
+
+    .rate {
+        display: inline-block;
+        border: 0;
+    }
+
+    .rate > label {
+        float: right;
+    }
+
+    /* Showing Stars */
+    .rate > label::before {
+        display: inline-block;
+        font-size: 1.1rem;
+        font-family: FontAwesome;
+        content: '\f005';
+        margin: 0;
+        padding: 0.3rem 0.2rem;
+        cursor: pointer;
+    }
+
+    /* Half Stars */
+    .rate .half::before {
+        content: '\f089';
+        position: absolute;
+        padding-right: 0;
+
+    }
+
+    /* Click and Hover */
+    input:checked ~ label, label:hover ~ label {
+        color: #ffb503;
+    }
+
+    /* Hover Highlight */
+    input:checked + label:hover, input:checked ~ label:hover, input:checked ~ label:hover ~ label, label:hover ~ input:checked ~ label {
+        color: #cc9000;
+    }
+
+    .rating-star i {
+        color: #ffb503 !important;
+    }
+</style>
+
+{% endblock content %}

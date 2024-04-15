@@ -1,0 +1,153 @@
+{% extends 'master/master_main.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Three charts -->
+        <!-- ============================================================== -->
+        <div class="row justify-content-center">
+            <div class="col-lg-4 col-md-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title">Total Products</h3>
+                    <ul class="list-inline two-part d-flex align-items-center mb-0">
+                        <li>
+                            <div id="sparklinedash"><canvas width="67" height="30"
+                                    style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                            </div>
+                        </li>
+                        <li class="ms-auto"><span class="counter text-success">{{total_products}}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title">Total Orders</h3>
+                    <ul class="list-inline two-part d-flex align-items-center mb-0">
+                        <li>
+                            <div id="sparklinedash2"><canvas width="67" height="30"
+                                    style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                            </div>
+                        </li>
+                        <li class="ms-auto"><span class="counter text-purple">{{total_order_count}}</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-12">
+                <div class="white-box analytics-info">
+                    <h3 class="box-title">Total Sale</h3>
+                    <ul class="list-inline two-part d-flex align-items-center mb-0">
+                        <li>
+                            <div id="sparklinedash3"><canvas width="67" height="30"
+                                    style="display: inline-block; width: 67px; height: 30px; vertical-align: top;"></canvas>
+                            </div>
+                        </li>
+                        <li class="ms-auto"><span class="counter text-info">{{total_revenue}}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row mt-4">
+            <div class="col-lg-12 mb-lg-0 mb-4">
+                <div class="card z-index-2 h-100">
+                    <div class="card-header pb-0 pt-3 bg-transparent">
+                        <h3 class="text-capitalize">Sales Overview</h3>
+                    </div>
+                    <div class="card-body p-3 row">
+                        <div class="col-12 col-lg-2 my-3" id="container">
+                            
+                        </div>
+                        <div class="col-12 col-lg-4 my-3" id="container">
+                            <p class="text-center" style="font-weight: bold; color: #D81B60; font-size: 20px">Customers : {{ total_user }}</p>
+                            <canvas id="myChart"></canvas>
+                        </div>
+                        
+                        <div class="col-12 col-lg-4 my-3" id="container">
+                            <p class="text-center" style="font-weight: bold; color: #D81B60; font-size: 20px">Sold Products : {{total_products}}</p>
+                            <canvas id="myChart4"></canvas>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div> 
+          </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script> 
+            var c_config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: {{ data1|safe }},
+                        backgroundColor: ['#4CAF50', 'rgb(255, 99, 132)'],
+                        borderWidth: 1 ,
+                        label: 'Customers',
+                    }],
+                    labels: {{ data1_label|safe }}
+                },
+                options: {
+                    responsive: true
+                },
+            };
+            
+            
+        
+            var b_config = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: {{ data4|safe }},
+                        backgroundColor: ['rgb(54, 162, 235)', 'rgb(153, 102, 255)', 'rgb(75, 192, 192)', 'rgb(255, 99, 132)'],
+                        borderWidth: 1 ,
+                        label: 'Category',
+                    }],
+                    labels: {{ data4_label|safe }}
+                },
+                options: {
+                    responsive: true
+                },
+            };
+        
+            const myChart1 = new Chart(
+            document.getElementById('myChart'),
+            c_config
+            );
+        
+           
+            
+        
+            const myChart4 = new Chart(
+            document.getElementById('myChart4'),
+            b_config
+            );
+        
+        </script>
+        <!-- ============================================================== -->
+        <!-- PRODUCTS YEARLY SALES -->
+        <!-- ============================================================== -->
+        
+    <!-- ============================================================== -->
+    <!-- End footer -->
+    <!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+
+
+
+{% endblock content %}

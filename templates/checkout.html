@@ -1,0 +1,242 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+
+<div class="breadcrumb-option">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="breadcrumb__links">
+          <a href="{% url 'home' %}"><i class="fa fa-home"></i> Home</a>
+          <span>Shopping cart</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% include 'alerts.html' %}
+<!-- Breadcrumb End -->
+
+<!-- Checkout Section Begin -->
+<section class="checkout spad">
+  <div class="container">
+    <div class="row">
+      <!-- <div class="col-lg-12">
+                <h6 class="coupon__link"><span class="icon_tag_alt"></span> <a href="#">Have a coupon?</a> Click
+                here to enter your code.</h6>
+            </div> -->
+    </div>
+
+    <form action="{% url 'save_address' %}" class="checkout__form" method="POST">
+      {% csrf_token %}
+      <div class="row">
+        <div class="col-lg-8">
+          <h5>Billing detail</h5>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="checkout__form__input">
+                <p>First Name <span>*</span></p>
+                <input type="text" name="firstname" required />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="checkout__form__input">
+                <p>Last Name <span>*</span></p>
+                <input type="text" name="lastname" required />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="checkout__form__input">
+                <p>Phone <span>*</span></p>
+                <input type="text" name="phonenumber" required />
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6">
+              <div class="checkout__form__input">
+                <p>Email <span>*</span></p>
+                <input type="email" name="email" required />
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="checkout__form__input">
+                <p>Address Line 1 <span>*</span></p>
+                <input type="text" name='addressfield_1' required />
+              </div>
+              <div class="checkout__form__input">
+                <p>Address Line 2<span>*</span></p>
+                <input type="text" name='addressfield_2' required />
+              </div>
+              <div class="checkout__form__input">
+                <p>City <span>*</span></p>
+                <input type="text" name="city" required />
+              </div>
+
+              <div class="checkout__form__input">
+                <p>State <span>*</span></p>
+                <input type="text" name="state" required />
+              </div>
+
+              <div class="checkout__form__input">
+                <p>Country <span>*</span></p>
+                <input type="text" name="country" required />
+              </div>
+              <div class="checkout__form__input">
+                <p>Postcode/Zip <span>*</span></p>
+                <input type="number" name='post_code'>
+            </div>
+              <button type="submit" name="submit" class="site-btn">Save Address</button>
+            </div>
+
+
+          </div>
+        </div>
+
+
+    </form>
+
+        <div class="col-lg-4">
+          <div class="checkout__order">
+            <h5>Your order</h5>
+            <div class="checkout__order__product">
+              <ul>
+                <li>
+                  <span class="top__text">Product</span>
+                  <span class="top__text__right">Total</span>
+                </li>
+                {% for cart_items in cart_items %}
+                <li>
+                  {{cart_items.product.product_name}}<span
+                    >{{cart_items.product.price}} ₸</span
+                  >
+                </li>
+
+                {% endfor %}
+              </ul>
+            </div>
+            <div class="checkout__order__total">
+              <ul>
+                <li>Subtotal <span>{{total}} ₸</span></li>
+                <li>Tax <span>{{tax}} ₸</span></li>
+                <li>Grand Total <span>{{grand_total}} ₸</span></li>
+                {% if applyed_coupen %}
+                <li>Applide Coupon <span>{{applyed_coupen}}</span></li>
+                <li>Discount Price <span>{{discount_price}}</span></li>
+                    
+                {% endif %}
+              </ul>
+            </div>
+            <form action="{% url 'place_order' %}" method="post">
+              {% csrf_token %}
+            <div class="checkout__order__widget">
+              <label for="o-acc">
+                Delivery Address
+                
+              </label>
+              {% for address in address %}
+                    <div style="display: flex">
+                        <input style="display: inline" type="radio" id="address" name="address" value="{{address.id}}">
+                        <label style="display: inline">
+                            {{address.firstname}},
+                            {{address.lastname}},
+                            {{address.addressfield_1}},
+                            {{address.addressfield_2}},
+                            {{address.city}},
+                            {{address.state}},
+                            {{address.country}},
+                            {{address.post_code}},
+                            {{address.phonenumber}},
+                        </label>
+                        
+                    </div>
+                    {% endfor %}
+                    <div class="checkout__order__widget">
+                        <h4 style="font-weight: 300;">Add a note</h4>
+                        <input type="text" name='ordernote' placeholder="Do you want to add a note?"
+                            class="form-control">
+                    </div>
+             
+            </div>
+            <button type="submit" name="submit" class="site-btn">Place oder</button>
+          </form>
+          </div>
+        </div>
+      </div>
+    
+  </div>
+</section>
+<!-- Checkout Section End -->
+
+<!-- Instagram Begin -->
+<div class="instagram">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-1.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-2.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-3.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-4.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-5.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-4 col-sm-4 p-0">
+        <div
+          class="instagram__item set-bg"
+          data-setbg="{% static 'img/instagram/insta-6.jpg' %}"
+        >
+          <div class="instagram__text">
+            <i class="fa fa-instagram"></i>
+            <a href="#">@ ashion_shop</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Instagram End -->
+
+{% endblock content %}

@@ -1,0 +1,127 @@
+{% extends 'master/master_main.html' %}
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="page-wrapper">
+    <!-- ============================================================== -->
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb bg-white">
+        <div class="row align-items-center">
+            <div class="col-lg-3 col-md-4 col-sm-4 col-xs-12">
+                <h4 class="page-title"></h4>
+            </div>
+            
+            <div class="col-lg-9 col-sm-8 col-md-8 col-xs-12">
+                <di class="d-md-flex">
+                    
+                    
+                    
+                        
+                    </div>
+            </div>
+        </div> 
+        <!-- /.col-lg-12
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- ============================================================== -->
+        <!-- Start Page Content -->
+        <!-- ============================================================== -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="white-box">
+                    <h3 class="box-title">Orders</h3>
+                    
+                    <div class="table-responsive">
+                        <table class="table text-nowrap">
+                            <thead>
+                                <tr>
+                                    <th class="border-top-0">Name</th>
+                                    <th class="border-top-0">Order Number</th>
+                                    <th class="border-top-0">Phone</th>
+                                    <th class="border-top-0">Status</th>
+                                    <th class="border-top-0">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                              {% for order in order %}
+                                
+                              
+                               
+                                <tr>
+                                    <td>{{order.user.first_name}}</td>
+                                    <td><a href="{% url 'order_details' order.order_number  %}">{{order.order_number}}</a></td>
+                                    <td>{{order.phone}}</td>
+                                    <td>{{order.status}}</td>
+                                    <td>{{order.created_at}}</td>
+                                    {% if order.status == 'Cancelled' %}
+                                        <td></td>
+                                    {% else %}
+                                    <td><td> <a href="{% url 'cancel_order' order.order_number %}" target=""class="btn btn-danger  d-none d-md-block pull-right ms-3 hidden-xs hidden-sm waves-effect waves-light text-white">Cancel Order</a> </td></td>
+                                    {% endif %}
+                                    
+                                    
+                                </tr>
+                                {% endfor %}
+                               
+                            </tbody>
+                        </table>
+                    </div>
+
+
+                    <div class="col-lg-12 text-center">
+                        {% if order.has_other_pages %}
+                                    
+                                
+                        <div class="pagination__option">
+                            {% if order.has_previous %}
+                            <a href="?page={{order.previous_page_number}}"><i class="fa fa-angle-left"></i></a>  
+                            {% else %}
+                            <a href="#"><i class="fa fa-angle-left"></i></a>
+                            {% endif %}
+
+                            {% for i in order.paginator.page_range %}
+                            {% if order.number == i %}
+                            <a href="#">{{i}}</a> 
+
+                            {% else %}<a href="?page={{i}}">{{i}}</a>    
+                            {% endif %}
+                            
+                            {% endfor %}
+                        
+                            {% if order.has_next %}
+                            <a href="?page={{order.next_page_number}}"><i class="fa fa-angle-right"></i></a>  
+                            {% else %}
+                            <a href="#"><i class="fa fa-angle-right"></i></a>
+                            {% endif %}
+
+                        </div>
+                        {% endif %}
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+       
+    </div>
+    
+</div>
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+</div>
+<!-- ============================================================== -->
+<!-- End Wrapper -->
+<!-- ============================================================== -->
+    
+{% endblock content %}
